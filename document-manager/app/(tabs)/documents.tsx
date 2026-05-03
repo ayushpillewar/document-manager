@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { DocumentCard } from '@/src/components/DocumentCard';
@@ -38,6 +39,14 @@ export default function DocumentsScreen() {
     importDocument,
     refresh,
   } = useDocuments();
+
+  // Reload whenever this tab comes into focus so the list always reflects
+  // documents saved on the Scanner tab (each tab has its own useDocuments instance).
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh]),
+  );
 
   const [editingDoc, setEditingDoc] = useState<Document | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
