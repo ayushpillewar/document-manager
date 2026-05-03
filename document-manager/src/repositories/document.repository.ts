@@ -1,5 +1,30 @@
 import { IDocumentRepository, IStorageService, Document } from '../types';
 import { STORAGE_KEYS } from '../constants/config';
+import * as FileSystem from 'expo-file-system/legacy';
+
+/**
+ * Normalises a stored absolute URI to the current documentDirectory.
+ * iOS assigns a new app-container UUID on every rebuild, making previously
+ * stored absolute paths stale. We find the stable "docvault/" marker and
+ * reattach the current documentDirectory prefix.
+ */
+function normalizePath(storedUri: string): string {
+  if (!storedUri) return storedUri;
+  const base = FileSystem.documentDirectory ?? '';
+  const marker = 'docvault/';
+  const idx = storedUri.indexOf(marker);
+  if (idx === -1) return storedUri;
+  return base + storedUri.slice(idx);
+}
+
+function normalizeDoc(doc: Document): Document {
+  return {
+    ...doc,
+    pdfUri: normalizePath(doc.pdfUri),
+    thumbnailUri: normalizePath(doc.thumbnailUri),
+    pages: doc.pages.map(normalizePath),
+  };
+}
 
 /**
  * Persists and retrieves documents using an injected IStorageService.
@@ -9,7 +34,8 @@ export class DocumentRepository implements IDocumentRepository {
   constructor(private readonly storage: IStorageService) {}
 
   async getAll(): Promise<Document[]> {
-    return (await this.storage.get<Document[]>(STORAGE_KEYS.documents)) ?? [];
+    const docs = (await this.storage.get<Document[]>(STORAGE_KEYS.documents)) ?? [];
+    return docs.map(normalizeDoc);
   }
 
   async getById(id: string): Promise<Document | null> {

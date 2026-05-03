@@ -23,6 +23,15 @@ export const APP_CONFIG = {
   // Scanner
   imageQuality: 0.85,
   maxPagesPerDocument: 50,
+  /**
+   * Apply a CSS filter to pages in the generated PDF to mimic a scanned document.
+   * Set to '' to disable and keep original colours.
+   * grayscale → removes colour ink artefacts
+   * contrast  → makes text crisp and dark
+   * brightness → compensates for the darkening effect of high contrast
+   * saturate(0) → fully desaturates any remaining colour cast
+   */
+  pdfScanFilter: 'grayscale(100%) saturate(0) contrast(1.3) brightness(1.35)',
   // Auth
   passcodeLength: 4,
   maxPasscodeAttempts: 5,

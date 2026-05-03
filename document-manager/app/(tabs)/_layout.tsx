@@ -51,6 +51,7 @@ export default function TabLayout() {
       {/* Hide the new screen files from the tab bar — they are used via re-exports */}
       <Tabs.Screen name="scanner" options={{ href: null }} />
       <Tabs.Screen name="documents" options={{ href: null }} />
+      <Tabs.Screen name="viewer" options={{ href: null }} />
     </Tabs>
   );
 }

@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { DocumentCard } from '@/src/components/DocumentCard';
@@ -24,6 +24,7 @@ import { Document } from '@/src/types';
 import { THEME, CATEGORIES } from '@/src/constants/config';
 
 export default function DocumentsScreen() {
+  const router = useRouter();
   const {
     documents,
     displayedDocuments,
@@ -191,7 +192,7 @@ export default function DocumentsScreen() {
           renderItem={({ item }) => (
             <DocumentCard
               document={item}
-              onPress={() => {/* Could open a detail/viewer screen */}}
+              onPress={() => router.push(`/viewer?id=${item.id}`)}
               onShare={() => shareDocument(item)}
               onEditCategory={() => setEditingDoc(item)}
               onDelete={() => confirmDelete(item)}
