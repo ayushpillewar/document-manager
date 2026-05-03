@@ -1,0 +1,85 @@
+PRIVACY POLICY — DocVault
+Last updated: 3 May 2026
+
+───────────────────────────────────────────────────────────────
+
+1. INTRODUCTION
+DocVault ("we", "our", or "the app") is a private document management application.
+This Privacy Policy explains how DocVault handles information when you use the app.
+
+───────────────────────────────────────────────────────────────
+
+2. INFORMATION WE COLLECT
+
+2.1 Data stored locally on your device
+DocVault stores the following data exclusively on your device:
+  • Scanned document images and generated PDF files
+  • Document metadata (name, category, date, file size)
+  • Your chosen authentication method (biometric or passcode)
+  • A hashed record of whether you have accepted this policy
+
+DocVault does NOT transmit any of your documents or personal data to any server
+or third party. All storage is local to your device only.
+
+2.2 Camera and Photo Library
+With your permission, DocVault accesses:
+  • The device camera — to scan and capture document pages
+  • The photo library — to import existing images as document pages
+
+These permissions are requested at runtime. You may revoke them at any time via
+your device Settings.
+
+2.3 Biometric data
+If you enable biometric authentication (Face ID / fingerprint), DocVault relies
+entirely on the device's native biometric API (provided by Apple or Google).
+DocVault never stores, reads, or transmits raw biometric data.
+
+───────────────────────────────────────────────────────────────
+
+3. HOW WE USE YOUR INFORMATION
+The data described in Section 2 is used solely to provide the features of the app:
+  • Displaying and organising your documents
+  • Generating PDFs from scanned pages
+  • Protecting access to the app with biometrics or a passcode
+
+───────────────────────────────────────────────────────────────
+
+4. DATA SHARING
+We do not share, sell, rent, or transfer your data to any third party.
+The only time document files leave your device is when you explicitly choose to
+share a document using the device's native share sheet.
+
+───────────────────────────────────────────────────────────────
+
+5. DATA RETENTION AND DELETION
+All data is stored locally on your device. You can delete individual documents
+from within the app at any time. Uninstalling the app removes all app data from
+your device in accordance with iOS / Android standard behaviour.
+
+───────────────────────────────────────────────────────────────
+
+6. SECURITY
+  • Passcodes are stored in the device's secure keychain / keystore.
+  • Biometric authentication uses the device's built-in secure enclave.
+  • No network connections are made by the app.
+
+───────────────────────────────────────────────────────────────
+
+7. CHILDREN'S PRIVACY
+DocVault is not directed at children under 13. We do not knowingly collect any
+personal information from children.
+
+───────────────────────────────────────────────────────────────
+
+8. CHANGES TO THIS POLICY
+We may update this Privacy Policy from time to time. The latest version will
+always be available at the URL shown in the app's splash screen. Continued use
+of the app after changes constitutes acceptance of the updated policy.
+
+───────────────────────────────────────────────────────────────
+
+9. CONTACT
+If you have questions about this Privacy Policy, please open an issue on the
+project's GitHub repository.
+
+───────────────────────────────────────────────────────────────
