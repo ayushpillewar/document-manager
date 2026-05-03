@@ -10,7 +10,7 @@ export class ScannerService implements IScannerService {
   async processImage(uri: string, quality = APP_CONFIG.imageQuality): Promise<string> {
     const result = await ImageManipulator.manipulateAsync(
       uri,
-      [{ resize: { width: 1200 } }], // normalise width, preserve aspect ratio
+      [{ resize: { width: APP_CONFIG.pdfPageWidth, height: APP_CONFIG.pdfPageHeight } }], // normalise to A4 page dimensions
       { compress: quality, format: ImageManipulator.SaveFormat.JPEG },
     );
 
@@ -20,3 +20,4 @@ export class ScannerService implements IScannerService {
     return destUri;
   }
 }
+

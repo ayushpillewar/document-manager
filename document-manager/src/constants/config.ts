@@ -23,6 +23,9 @@ export const APP_CONFIG = {
   // Scanner
   imageQuality: 0.85,
   maxPagesPerDocument: 50,
+  /** A4 page dimensions at 150 DPI (210 mm × 297 mm). Used to normalise scanned pages. */
+  pdfPageWidth: 1240,
+  pdfPageHeight: 1400,
   /**
    * Apply a CSS filter to pages in the generated PDF to mimic a scanned document.
    * Set to '' to disable and keep original colours.
