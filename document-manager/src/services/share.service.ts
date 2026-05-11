@@ -10,10 +10,12 @@ export class ShareService implements IShareService {
   async shareFile(uri: string, title?: string): Promise<void> {
     const available = await this.isAvailable();
     if (!available) throw new Error('Sharing is not available on this device');
+
+    const isZip = uri.endsWith('.zip');
     await Sharing.shareAsync(uri, {
       dialogTitle: title ?? 'Share Document',
-      UTI: 'com.adobe.pdf',
-      mimeType: 'application/pdf',
+      UTI: isZip ? 'public.zip-archive' : 'com.adobe.pdf',
+      mimeType: isZip ? 'application/zip' : 'application/pdf',
     });
   }
 }

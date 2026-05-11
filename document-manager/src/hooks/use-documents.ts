@@ -7,6 +7,8 @@ import {
   shareService,
 } from '../services/container';
 import { generateId } from '../utils/helpers';
+import * as FileSystem from 'expo-file-system/legacy';
+import { zipSync, strToU8 } from 'fflate';
 
 export function useDocuments() {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -124,8 +126,54 @@ export function useDocuments() {
 
   const shareByCategory = useCallback(async (category: string) => {
     const docs = await documentRepository.getByCategory(category);
+    if (docs.length === 0) return;
+
+    // Collect each PDF as base64, build a zip in memory, then share it.
+    const zipEntries: Record<string, Uint8Array> = {};
+    const usedNames = new Set<string>();
+
     for (const doc of docs) {
-      await shareService.shareFile(doc.pdfUri, doc.name);
+      const base64 = await FileSystem.readAsStringAsync(doc.pdfUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      // Convert base64 → Uint8Array
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      // Ensure unique filename inside the zip
+      const safeName = doc.name.replace(/[^a-z0-9 _\-]/gi, '_');
+      let fileName = `${safeName}.pdf`;
+      if (usedNames.has(fileName)) {
+        fileName = `${safeName}_${doc.id.slice(0, 6)}.pdf`;
+      }
+      usedNames.add(fileName);
+      zipEntries[fileName] = bytes;
+    }
+
+    const zipData = zipSync(zipEntries);
+
+    // Write zip to a temp file
+    const safeCat = category.replace(/[^a-z0-9]/gi, '_');
+    const zipPath = `${FileSystem.cacheDirectory}${safeCat}_documents_${Date.now()}.zip`;
+    // Convert Uint8Array → base64 in chunks to avoid call-stack overflow on large zips
+    const CHUNK = 8192;
+    let zipBase64 = '';
+    for (let offset = 0; offset < zipData.length; offset += CHUNK) {
+      zipBase64 += String.fromCharCode(...zipData.subarray(offset, offset + CHUNK));
+    }
+    zipBase64 = btoa(zipBase64);
+    await FileSystem.writeAsStringAsync(zipPath, zipBase64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    try {
+      await shareService.shareFile(zipPath, `${category} Documents`);
+    } finally {
+      // Clean up temp zip after sharing
+      await FileSystem.deleteAsync(zipPath, { idempotent: true });
     }
   }, []);
 
