@@ -1,5 +1,5 @@
 # DocVault — App Store Submission Metadata
-> Version 1.0.0 · Bundle ID: `com.majboormajdoor.document-manager`
+> Version 1.1.0 · Bundle ID: `com.majboormajdoor.document-manager`
 
 ---
 
@@ -135,7 +135,18 @@ Run the App Store Connect age-rating questionnaire with the answers below:
 
 ---
 
-## 11. What's New (Version 1.0.0)
+## 11. What's New (Version 1.1.0)
+```
+Bulk export just got smarter.
+
+• Export all documents in a category as a single ZIP file — one tap, one file, everything included.
+• Each PDF inside the ZIP keeps its original document name for easy identification.
+• Share the ZIP via AirDrop, Mail, Files, or any app that accepts zip archives.
+```
+
+---
+
+## 11a. What's New (Version 1.0.0)
 ```
 Welcome to DocVault!
 
