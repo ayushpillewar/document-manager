@@ -2,7 +2,7 @@
   "expo": {
     "name": "DocVault",
     "slug": "document-manager",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "documentmanager",
@@ -72,6 +72,14 @@
             "backgroundColor": "#0F172A"
           }
         }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-9763401578858179~3753499634",
+          "iosAppId": "ca-app-pub-9763401578858179~3753499634",
+          "userTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you."
+        }
       ]
     ],
     "experiments": {
@@ -80,3 +88,4 @@
     }
   }
 }
+

@@ -2,10 +2,12 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { AuthProvider } from '@/src/contexts/auth.context';
+import { useInterstitialOnLaunch } from '@/src/components/AdMob';
 
-export default function RootLayout() {
+function AppContent() {
+  useInterstitialOnLaunch();
   return (
-    <AuthProvider>
+    <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="splash" />
@@ -13,6 +15,14 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
       </Stack>
       <StatusBar style="auto" />
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

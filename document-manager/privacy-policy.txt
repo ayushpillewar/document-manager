@@ -1,5 +1,5 @@
 PRIVACY POLICY — DocVault
-Last updated: 3 May 2026
+Last updated: 26 May 2026
 
 ───────────────────────────────────────────────────────────────
 
@@ -34,6 +34,30 @@ If you enable biometric authentication (Face ID / fingerprint), DocVault relies
 entirely on the device's native biometric API (provided by Apple or Google).
 DocVault never stores, reads, or transmits raw biometric data.
 
+2.4 Advertising (Google AdMob)
+DocVault displays advertisements served by Google AdMob
+(Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA).
+To serve and measure ads, Google AdMob may collect and process:
+  • Advertising identifiers (IDFA on iOS, GAID on Android)
+  • IP address and approximate location (country / region)
+  • Device information (model, OS version, language, time zone)
+  • Ad interaction data (impressions, clicks, conversions)
+  • App usage signals used for ad targeting and fraud prevention
+
+On iOS 14.5 and later, the app requests permission to track you via Apple's
+App Tracking Transparency (ATT) framework before any advertising identifier
+is accessed. You may deny this permission and still use all app features;
+non-personalised ads will be shown instead.
+
+You can opt out of personalised advertising at any time:
+  • iOS: Settings › Privacy & Security › Tracking — disable per-app or globally
+  • Android: Settings › Google › Ads › Delete advertising ID
+
+Google's privacy policy and data practices are described at:
+https://policies.google.com/privacy
+Google's advertising partner policy:
+https://policies.google.com/technologies/partner-sites
+
 ───────────────────────────────────────────────────────────────
 
 3. HOW WE USE YOUR INFORMATION
@@ -45,9 +69,14 @@ The data described in Section 2 is used solely to provide the features of the ap
 ───────────────────────────────────────────────────────────────
 
 4. DATA SHARING
-We do not share, sell, rent, or transfer your data to any third party.
+We do not share, sell, rent, or transfer your document data to any third party.
 The only time document files leave your device is when you explicitly choose to
 share a document using the device's native share sheet.
+
+Advertising data described in Section 2.4 is shared with Google AdMob solely
+for the purpose of serving and measuring advertisements. DocVault does not
+control Google's data practices; please refer to Google's privacy policy for
+full details.
 
 ───────────────────────────────────────────────────────────────
 
@@ -61,7 +90,9 @@ your device in accordance with iOS / Android standard behaviour.
 6. SECURITY
   • Passcodes are stored in the device's secure keychain / keystore.
   • Biometric authentication uses the device's built-in secure enclave.
-  • No network connections are made by the app.
+  • Your documents are never transmitted over the network.
+  • Ad network traffic (Google AdMob) is handled entirely by Google's SDK
+    over encrypted HTTPS connections.
 
 ───────────────────────────────────────────────────────────────
 
