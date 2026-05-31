@@ -47,13 +47,25 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       try {
         await iapService.initialize();
-        const [purchased, prod] = await Promise.all([
+        // Check local cache first for instant result, then silently verify
+        // with Apple's servers so a previously purchased entitlement is always
+        // honoured even after reinstall or device change.
+        const [cachedPurchased, prod] = await Promise.all([
           iapService.isRemoveAdsPurchased(),
           iapService.getProduct(),
         ]);
+        console.log('IAP initialized. Cached purchased:', cachedPurchased, 'Product:', prod);
         if (isMounted.current) {
-          setIsAdFree(purchased);
           setProduct(prod);
+          if (cachedPurchased) {
+            console.log('Cached purchase found. Setting ad-free mode.');
+            setIsAdFree(true);
+          } else {
+            // Silent restore — no UI, no error shown to user.
+            const restored = await iapService.restorePurchases();
+            console.log('Silent restore result:', restored);
+            if (isMounted.current) setIsAdFree(restored);
+          }
         }
       } catch {
         // IAP unavailable (e.g. simulator, sandbox not configured) — degrade gracefully.

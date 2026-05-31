@@ -19,12 +19,11 @@ import { THEME } from '../constants/config';
  * Open/Closed           – styled via StyleSheet; extend appearance without
  *                         touching logic.
  *
- * Returns null when the purchase has already been made so callers do not need
- * to guard against rendering it.
+ * Returns null when loading or when the purchase already exists (auto-detected
+ * silently on startup via IAPContext).
  */
 export function RemoveAdsButton() {
-  const { isAdFree, isLoading, product, isPurchasing, purchaseRemoveAds, restorePurchases } =
-    useIAPContext();
+  const { isAdFree, isLoading, product, isPurchasing, purchaseRemoveAds } = useIAPContext();
 
   if (isLoading || isAdFree) return null;
 
@@ -32,16 +31,6 @@ export function RemoveAdsButton() {
     const result = await purchaseRemoveAds();
     if (!result.success && result.error !== 'Purchase cancelled') {
       Alert.alert('Purchase Failed', result.error ?? 'Something went wrong. Please try again.');
-    }
-  };
-
-  const handleRestore = async () => {
-    const restored = await restorePurchases();
-    if (!restored) {
-      Alert.alert(
-        'Nothing to Restore',
-        'No previous "Remove Ads" purchase was found for this Apple ID.',
-      );
     }
   };
 
@@ -55,29 +44,18 @@ export function RemoveAdsButton() {
         </View>
       </View>
 
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={[styles.btn, styles.restoreBtn]}
-          onPress={handleRestore}
-          disabled={isPurchasing}
-          accessibilityLabel="Restore previous purchase"
-        >
-          <Text style={styles.restoreText}>Restore</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.btn, styles.buyBtn]}
-          onPress={handlePurchase}
-          disabled={isPurchasing}
-          accessibilityLabel={`Buy Remove Ads${product ? ` for ${product.price}` : ''}`}
-        >
-          {isPurchasing ? (
-            <ActivityIndicator color="#fff" size="small" />
-          ) : (
-            <Text style={styles.buyText}>{product ? product.price : 'Buy'}</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={[styles.btn, styles.buyBtn]}
+        onPress={handlePurchase}
+        disabled={isPurchasing}
+        accessibilityLabel={`Buy Remove Ads${product ? ` for ${product.price}` : ''}`}
+      >
+        {isPurchasing ? (
+          <ActivityIndicator color="#fff" size="small" />
+        ) : (
+          <Text style={styles.buyText}>{product ? product.price : 'Buy'}</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -115,10 +93,6 @@ const styles = StyleSheet.create({
     color: THEME.colors.textSecondary,
     marginTop: 1,
   },
-  actions: {
-    flexDirection: 'row',
-    gap: THEME.spacing.sm,
-  },
   btn: {
     borderRadius: THEME.radius.sm,
     paddingHorizontal: THEME.spacing.sm + 2,
@@ -134,15 +108,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: THEME.fontSize.sm,
     fontWeight: THEME.fontWeight.semibold as any,
-  },
-  restoreBtn: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: THEME.colors.primary,
-  },
-  restoreText: {
-    color: THEME.colors.primary,
-    fontSize: THEME.fontSize.sm,
-    fontWeight: THEME.fontWeight.medium as any,
   },
 });
