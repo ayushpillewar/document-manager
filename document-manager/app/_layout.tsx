@@ -2,10 +2,13 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { AuthProvider } from '@/src/contexts/auth.context';
+import { IAPProvider } from '@/src/contexts/iap.context';
+import { useIAPContext } from '@/src/contexts/iap.context';
 import { useInterstitialOnLaunch } from '@/src/components/AdMob';
 
 function AppContent() {
-  useInterstitialOnLaunch();
+  const { isAdFree } = useIAPContext();
+  useInterstitialOnLaunch(isAdFree);
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
@@ -22,7 +25,10 @@ function AppContent() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <AppContent />
+      <IAPProvider>
+        <AppContent />
+      </IAPProvider>
     </AuthProvider>
   );
 }
+

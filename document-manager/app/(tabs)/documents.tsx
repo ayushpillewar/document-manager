@@ -19,6 +19,7 @@ import { CategoryFilter } from '@/src/components/CategoryFilter';
 import { EditCategoryModal } from '@/src/components/EditCategoryModal';
 import { EmptyState } from '@/src/components/EmptyState';
 import { SaveDocumentModal } from '@/src/components/SaveDocumentModal';
+import { RemoveAdsButton } from '@/src/components/RemoveAdsButton';
 import { useDocuments } from '@/src/hooks/use-documents';
 import { Document } from '@/src/types';
 import { THEME, CATEGORIES } from '@/src/constants/config';
@@ -111,6 +112,9 @@ export default function DocumentsScreen() {
 
   const renderHeader = () => (
     <>
+      {/* Remove Ads purchase banner — hidden once purchased */}
+      <RemoveAdsButton />
+
       {/* Search bar */}
       <View style={styles.searchRow}>
         <View style={styles.searchBox}>

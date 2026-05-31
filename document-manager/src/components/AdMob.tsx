@@ -9,10 +9,20 @@ const INTERSTITIAL_UNIT_ID = __DEV__
   ? TestIds.INTERSTITIAL
   : 'ca-app-pub-9763401578858179/6723963665';
 
-export function useInterstitialOnLaunch(): void {
+/**
+ * Shows a one-time interstitial ad on app launch.
+ *
+ * Single Responsibility – only manages the interstitial ad lifecycle.
+ * Open/Closed           – pass isAdFree=true to disable ads without modifying this hook.
+ *
+ * @param isAdFree – when true the hook exits immediately and shows no ad.
+ */
+export function useInterstitialOnLaunch(isAdFree: boolean): void {
   const shown = useRef(false);
 
   useEffect(() => {
+    if (isAdFree) return; // user purchased "Remove Ads" — skip entirely
+
     let unsubscribeLoaded: (() => void) | undefined;
     let unsubscribeError: (() => void) | undefined;
     let unsubscribeClosed: (() => void) | undefined;
@@ -50,6 +60,6 @@ export function useInterstitialOnLaunch(): void {
       unsubscribeError?.();
       unsubscribeClosed?.();
     };
-  }, []);
+  }, [isAdFree]);
 }
 
