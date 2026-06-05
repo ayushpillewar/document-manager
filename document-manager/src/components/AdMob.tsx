@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import mobileAds, {
   InterstitialAd,
   AdEventType,
@@ -17,7 +17,7 @@ const INTERSTITIAL_UNIT_ID = __DEV__
  *
  * @param isAdFree – when true the hook exits immediately and shows no ad.
  */
-export function useInterstitialOnLaunch(isAdFree: boolean): void {
+export function useInterstitial(isAdFree: boolean): void {
   const shown = useRef(false);
 
   useEffect(() => {
@@ -61,5 +61,61 @@ export function useInterstitialOnLaunch(isAdFree: boolean): void {
       unsubscribeClosed?.();
     };
   }, [isAdFree]);
+}
+
+/**
+ * Returns a `showAd` callback that loads and displays an interstitial ad on demand.
+ * Automatically preloads the next ad after each close.
+ *
+ * @param isAdFree – when true the hook exits immediately and showAd is a no-op.
+ */
+export function useInterstitialAd(isAdFree: boolean): { showAd: () => void } {
+  const adRef = useRef<InterstitialAd | null>(null);
+  const loadedRef = useRef(false);
+  const initializedRef = useRef(false);
+
+  const loadAd = useCallback(() => {
+    if (isAdFree || !initializedRef.current) return;
+
+    const interstitial = InterstitialAd.createForAdRequest(INTERSTITIAL_UNIT_ID, {
+      requestNonPersonalizedAdsOnly: false,
+    });
+
+    interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      loadedRef.current = true;
+    });
+
+    interstitial.addAdEventListener(AdEventType.ERROR, () => {
+      loadedRef.current = false;
+    });
+
+    interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+      loadedRef.current = false;
+      // Preload the next ad immediately after close
+      loadAd();
+    });
+
+    adRef.current = interstitial;
+    interstitial.load();
+  }, [isAdFree]);
+
+  useEffect(() => {
+    if (isAdFree) return;
+
+    mobileAds()
+      .initialize()
+      .then(() => {
+        initializedRef.current = true;
+        loadAd();
+      })
+      .catch(() => {});
+  }, [isAdFree, loadAd]);
+
+  const showAd = useCallback(() => {
+    if (isAdFree || !adRef.current || !loadedRef.current) return;
+    adRef.current.show();
+  }, [isAdFree]);
+
+  return { showAd };
 }
 

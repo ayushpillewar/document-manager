@@ -60,12 +60,7 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
           if (cachedPurchased) {
             console.log('Cached purchase found. Setting ad-free mode.');
             setIsAdFree(true);
-          } else {
-            // Silent restore — no UI, no error shown to user.
-            const restored = await iapService.restorePurchases();
-            console.log('Silent restore result:', restored);
-            if (isMounted.current) setIsAdFree(restored);
-          }
+          } 
         }
       } catch {
         // IAP unavailable (e.g. simulator, sandbox not configured) — degrade gracefully.

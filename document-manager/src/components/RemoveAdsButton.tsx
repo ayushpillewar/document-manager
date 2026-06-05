@@ -23,9 +23,9 @@ import { THEME } from '../constants/config';
  * silently on startup via IAPContext).
  */
 export function RemoveAdsButton() {
-  const { isAdFree, isLoading, product, isPurchasing, purchaseRemoveAds } = useIAPContext();
+  const { isAdFree, isLoading, product, isPurchasing, purchaseRemoveAds, restorePurchases } = useIAPContext();
 
-  if (isLoading || isAdFree) return null;
+  if (isLoading) return null;
 
   const handlePurchase = async () => {
     const result = await purchaseRemoveAds();
@@ -33,6 +33,29 @@ export function RemoveAdsButton() {
       Alert.alert('Purchase Failed', result.error ?? 'Something went wrong. Please try again.');
     }
   };
+
+  const handleRestore = async () => {
+    const restored = await restorePurchases();
+    if (!restored) {
+      Alert.alert('Restore Failed', 'No previous purchases found or restore failed. Please try again.');
+    }
+  };
+
+  // Show "Pro plan active" when user has purchased
+  if (isAdFree) {
+    return (
+      <View style={[styles.container, styles.activeContainer]}>
+        <View style={styles.left}>
+          <Ionicons name="shield-checkmark" size={20} color="#10B981" />
+          <View style={styles.textGroup}>
+            <Text style={styles.activeTitle}>Pro Plan Active</Text>
+            <Text style={styles.activeSubtitle}>Ads removed · Enjoy ad-free experience</Text>
+          </View>
+        </View>
+        <Ionicons name="checkmark-circle" size={24} color="#10B981" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -44,18 +67,33 @@ export function RemoveAdsButton() {
         </View>
       </View>
 
-      <TouchableOpacity
-        style={[styles.btn, styles.buyBtn]}
-        onPress={handlePurchase}
-        disabled={isPurchasing}
-        accessibilityLabel={`Buy Remove Ads${product ? ` for ${product.price}` : ''}`}
-      >
-        {isPurchasing ? (
-          <ActivityIndicator color="#fff" size="small" />
-        ) : (
-          <Text style={styles.buyText}>{product ? product.price : 'Buy'}</Text>
-        )}
-      </TouchableOpacity>
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          style={[styles.btn, styles.buyBtn]}
+          onPress={handlePurchase}
+          disabled={isPurchasing}
+          accessibilityLabel={`Buy Remove Ads${product ? ` for ${product.price}` : ''}`}
+        >
+          {isPurchasing ? (
+            <ActivityIndicator color="#fff" size="small" />
+          ) : (
+            <Text style={styles.buyText}>{product ? product.price : 'Buy'}</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.btn, styles.restoreBtn]}
+          onPress={handleRestore}
+          disabled={isPurchasing}
+          accessibilityLabel="Restore previous purchase"
+        >
+          {isPurchasing ? (
+            <ActivityIndicator color={THEME.colors.primary} size="small" />
+          ) : (
+            <Text style={styles.restoreText}>Restore</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -74,6 +112,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#BFDBFE',
   },
+  activeContainer: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
+  },
   left: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -88,10 +130,25 @@ const styles = StyleSheet.create({
     fontWeight: THEME.fontWeight.semibold as any,
     color: THEME.colors.primaryDark,
   },
+  activeTitle: {
+    fontSize: THEME.fontSize.sm,
+    fontWeight: THEME.fontWeight.semibold as any,
+    color: '#059669',
+  },
   subtitle: {
     fontSize: THEME.fontSize.xs,
     color: THEME.colors.textSecondary,
     marginTop: 1,
+  },
+  activeSubtitle: {
+    fontSize: THEME.fontSize.xs,
+    color: '#047857',
+    marginTop: 1,
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    gap: THEME.spacing.xs,
+    alignItems: 'center',
   },
   btn: {
     borderRadius: THEME.radius.sm,
@@ -106,6 +163,16 @@ const styles = StyleSheet.create({
   },
   buyText: {
     color: '#fff',
+    fontSize: THEME.fontSize.sm,
+    fontWeight: THEME.fontWeight.semibold as any,
+  },
+  restoreBtn: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: THEME.colors.primary,
+  },
+  restoreText: {
+    color: THEME.colors.primary,
     fontSize: THEME.fontSize.sm,
     fontWeight: THEME.fontWeight.semibold as any,
   },

@@ -2,7 +2,7 @@
   "expo": {
     "name": "DocVault",
     "slug": "document-manager",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "documentmanager",
@@ -14,7 +14,8 @@
         "NSCameraUsageDescription": "DocVault uses the camera to scan and capture document pages.",
         "NSPhotoLibraryUsageDescription": "DocVault accesses your photo library to import document images.",
         "NSPhotoLibraryAddUsageDescription": "DocVault saves document images to your photo library.",
-        "NSFaceIDUsageDescription": "DocVault uses Face ID to securely protect your documents."
+        "NSFaceIDUsageDescription": "DocVault uses Face ID to securely protect your documents.",
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you."
       },
       "bundleIdentifier": "com.majboormajdoor.document-manager"
     },

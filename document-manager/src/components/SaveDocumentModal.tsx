@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME, CATEGORIES } from '../constants/config';
+import { useIAPContext } from '../contexts/iap.context';
+import { useInterstitialAd } from './AdMob';
 
 interface Props {
   visible: boolean;
@@ -27,6 +29,8 @@ export function SaveDocumentModal({ visible, pageCount, onSave, onShare, onClose
   const [category, setCategory] = useState<string>(CATEGORIES[0]);
   const [loading, setLoading] = useState(false);
   const [nameError, setNameError] = useState('');
+  const { isAdFree } = useIAPContext();
+  const { showAd } = useInterstitialAd(isAdFree);
 
   const validate = () => {
     if (!name.trim()) {
@@ -44,6 +48,7 @@ export function SaveDocumentModal({ visible, pageCount, onSave, onShare, onClose
       await onSave(name.trim(), category);
       setName('');
       setCategory(CATEGORIES[0]);
+      showAd();
     } finally {
       setLoading(false);
     }
@@ -56,6 +61,7 @@ export function SaveDocumentModal({ visible, pageCount, onSave, onShare, onClose
       await onShare(name.trim(), category);
       setName('');
       setCategory(CATEGORIES[0]);
+      showAd();
     } finally {
       setLoading(false);
     }
