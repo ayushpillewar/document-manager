@@ -10,6 +10,7 @@ import { PasscodeService } from './passcode.service';
 import { PDFService } from './pdf.service';
 import { ScannerService } from './scanner.service';
 import { ShareService } from './share.service';
+import { IAPService } from './iap.service';
 import { DocumentRepository } from '../repositories/document.repository';
 
 // Layer 1 – no dependencies
@@ -20,6 +21,7 @@ const secureStorageService = new SecureStorageService();
 const biometricService = new BiometricService(storageService);
 const passcodeService = new PasscodeService(storageService, secureStorageService);
 const documentRepository = new DocumentRepository(storageService);
+const iapService = new IAPService(storageService);
 
 // Infrastructure services – no cross-dependencies
 const pdfService = new PDFService();
@@ -32,6 +34,7 @@ export {
   biometricService,
   passcodeService,
   documentRepository,
+  iapService,
   pdfService,
   scannerService,
   shareService,

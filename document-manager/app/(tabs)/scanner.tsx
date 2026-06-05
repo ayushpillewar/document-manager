@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,9 @@ import {
   Alert,
   ActivityIndicator,
   StatusBar,
+  Platform,
 } from 'react-native';
+import * as TrackingTransparency from 'expo-tracking-transparency';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,8 +33,40 @@ export default function ScannerScreen() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [attRequested, setAttRequested] = useState(false);
 
   const { createDocument } = useDocuments();
+
+  // ── Request App Tracking Transparency permission (iOS 14.5+) ──────────────
+
+  useEffect(() => {
+    const requestATT = async () => {
+      if (Platform.OS !== 'ios') {
+        console.log('Not iOS, skipping ATT request');
+        return;
+      }
+
+      try {
+        console.log('Checking ATT permission status...');
+        const status = await TrackingTransparency.getTrackingPermissionsAsync();
+        console.log('Current ATT status:', status.status);
+
+        // Only request if status is undetermined
+        if (status.status === 'undetermined') {
+          console.log('ATT status undetermined, requesting permission...');
+          const result = await TrackingTransparency.requestTrackingPermissionsAsync();
+          console.log('ATT request result:', result.status);
+          setAttRequested(true);
+        } else {
+          console.log('ATT already determined:', status.status);
+        }
+      } catch (error) {
+        console.error('Error with ATT permission:', error);
+      }
+    };
+
+    requestATT();
+  }, []);
 
   // ── Permission guards ─────────────────────────────────────────────────────
 

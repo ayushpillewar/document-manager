@@ -115,3 +115,43 @@ export interface IShareService {
   shareFile(uri: string, title?: string): Promise<void>;
   isAvailable(): Promise<boolean>;
 }
+
+// ── In-App Purchase (ISP: split into focused contracts) ─────────────────────
+
+export interface IAPProduct {
+  productId: string;
+  title: string;
+  description: string;
+  price: string;
+}
+
+export interface IPurchaseResult {
+  success: boolean;
+  error?: string;
+}
+
+/** Fetches product metadata from the store. */
+export interface IIAPProductFetcher {
+  getProduct(): Promise<IAPProduct | null>;
+}
+
+/** Initiates and restores purchases. */
+export interface IIAPPurchaser {
+  requestPurchase(): Promise<IPurchaseResult>;
+  restorePurchases(): Promise<boolean>;
+}
+
+/** Reads cached purchase entitlement status. */
+export interface IIAPStatusChecker {
+  isRemoveAdsPurchased(): Promise<boolean>;
+}
+
+/**
+ * Composed IAP service interface.
+ * Open/Closed: swap the concrete implementation (StoreKit, mock, RevenueCat)
+ * without modifying any consumer.
+ */
+export interface IIAPService extends IIAPProductFetcher, IIAPPurchaser, IIAPStatusChecker {
+  initialize(): Promise<void>;
+  destroy(): void;
+}

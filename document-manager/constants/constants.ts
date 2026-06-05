@@ -1,0 +1,1 @@
+export const APP_PREMIUM_IOS_PRODUCT_ID = 'com.majboormajdoor.docvault.addfree';

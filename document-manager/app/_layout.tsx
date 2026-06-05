@@ -1,11 +1,16 @@
+import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { AuthProvider } from '@/src/contexts/auth.context';
-import { useInterstitialOnLaunch } from '@/src/components/AdMob';
+import { IAPProvider } from '@/src/contexts/iap.context';
+import { useIAPContext } from '@/src/contexts/iap.context';
+import { useInterstitial } from '@/src/components/AdMob';
+import { TrackingService } from '@/src/services/tracking.service';
 
 function AppContent() {
-  useInterstitialOnLaunch();
+  const { isAdFree } = useIAPContext();
+  useInterstitial(isAdFree);
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
@@ -20,9 +25,16 @@ function AppContent() {
 }
 
 export default function RootLayout() {
+  useEffect(() => {
+    TrackingService.requestPermission();
+  }, []);
+
   return (
     <AuthProvider>
-      <AppContent />
+      <IAPProvider>
+        <AppContent />
+      </IAPProvider>
     </AuthProvider>
   );
 }
+

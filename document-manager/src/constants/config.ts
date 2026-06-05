@@ -60,12 +60,20 @@ export const STORAGE_KEYS = {
   authSetup: '@docvault:auth_setup',
   authMethod: '@docvault:auth_method',
   splashAccepted: '@docvault:splash_accepted',
+  removeAdsPurchased: '@docvault:remove_ads_purchased',
 } as const;
 
 // ── SecureStore keys ────────────────────────────────────────────────────────
 export const SECURE_STORAGE_KEYS = {
   passcode: 'docvault_passcode',
 } as const;
+
+// ── In-App Purchase ─────────────────────────────────────────────────────────
+/**
+ * Create a Non-Consumable product in App Store Connect with this exact ID.
+ * Bundle ID: com.majboormajdoor.document-manager
+ */
+
 
 // ── Design system ───────────────────────────────────────────────────────────
 export const THEME = {
